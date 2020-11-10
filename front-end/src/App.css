@@ -1,0 +1,56 @@
+.App {
+  background: #25272e;
+  margin-top: 50px;
+  margin-left: 50px;
+  margin-right: 50px;
+  height: 100vh;
+  border-radius: 25em;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  background: #ad343e;
+}
+
+.header-text,
+.opinion-header {
+  text-align: right;
+  color: #bfc3ce;
+  margin-right: 20px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.guano {
+  text-align: right;
+  margin-right: 20px;
+  padding-left: 100px;
+  color: #767c91;
+  font-family: monospace;
+}
+
+@media screen and (max-width: 768px) {
+  .header-text,
+  .opinion-header {
+    text-align: center;
+    color: #bfc3ce;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+  .guano {
+    text-align: center;
+    margin-right: 20px;
+    color: #767c91;
+    font-family: monospace;
+    font-size: 500%;
+    margin-right: 0px;
+    padding: 0px;
+  }
+  .App {
+    border-radius: 15em;
+  }
+}
