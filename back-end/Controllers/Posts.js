@@ -15,11 +15,10 @@ var PostsController = {
   },
   Create: function(req, res) {
     var post = new Post(req.body);
-
     post.save(function(err) {
       if (err) { throw err; }
 
-      res.status(201).redirect('/api')
+      res.status(201).redirect('/api/posts')
     });
   },
 
@@ -28,7 +27,7 @@ var PostsController = {
     Post.deleteOne({"_id" : id}, function(err){
       if(err) { throw err; }
 
-      res.status(201).redirect('/api')
+      res.status(201).redirect('/api/posts')
     });
   },
 
@@ -42,7 +41,7 @@ var PostsController = {
     Post.updateOne({"_id" : id}, {$set: {"thought": thought, "opinion": opinion , "comments": comments}}, {upsert: true}, function(err){
       if(err) { throw err; }
 
-      res.status(201).redirect('/api')
+      res.status(201).redirect('/api/posts')
     })
   },
 
@@ -59,6 +58,6 @@ var PostsController = {
   UpdateForm: function(req, res) {
     res.render('/update', {});
   }
-}
+};
 
 module.exports = PostsController;

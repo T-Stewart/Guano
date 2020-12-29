@@ -1,8 +1,9 @@
 import React from "react"
-import $, { event } from "jquery"
+import $  from "jquery"
 import axios from "axios"
 import "./Post.css"
-import thoughts from "./ThoughtGenerator"
+import thoughts from "../ThoughtGenerator"
+import Title from "../Title/Title"
 
 
 export default class Posts extends React.Component {
@@ -16,41 +17,37 @@ export default class Posts extends React.Component {
             updateThought: '',
             isInEditMode: false,
             isInCommentMode: false,
-            updateID:''
-         }
-
-    }
+            updateID:'',
+            firstName: 'tom'
+         };
+    };
 
     randomThought = () => {
-      
         const randomThought = thoughts[Math.floor(Math.random()* thoughts.length)]
-       
-        this.setState({thought: randomThought})
-        
-  }
+        this.setState({thought: randomThought}) 
+    };
 
     componentDidMount = () => {
-        console.log("Are we mounted?")
+        this.takeUserId();
+        console.log("Are we mounted?", this.state.firstName)
         this.getBlogPost();
-    }
+    };
 
     getBlogPost = () => {
-        axios.get('/api')
+        axios.get('/api/posts')
         .then((response) => {
             const data = response.data
-            this.setState({posts: data})
-            
+            this.setState({posts: data}) 
         })
         .catch(() => {
-         console.log('Error')
-        })
+        //  console.log('Error')
+        });
     };
 
     handleChange = (e) => {
         const target = e.target;
         const name = target.name;
         const value = target.value;
-
         this.setState({
             [name]: value
         });
@@ -58,15 +55,14 @@ export default class Posts extends React.Component {
 
     submit = (e) => {
         e.preventDefault();
-        // const { match: { params } } = this.props;
-
         const post = {
             thought: this.state.thought,
-            opinion: this.state.opinion
+            opinion: this.state.opinion,
+            firstName: this.state.firstName,  
         };
 
         axios ({
-            url: '/api',
+            url: '/api/posts',
             method: 'POST',
             data: post
         })
@@ -80,8 +76,8 @@ export default class Posts extends React.Component {
         })
         .catch(() => {
             console.log('Error')
-        })
-    }
+        });
+    };
 
     update = (e) => {
         e.preventDefault();
@@ -90,7 +86,7 @@ export default class Posts extends React.Component {
             id: e.target.dataset.id
         } 
         axios ({
-            url: '/api/retrieve',
+            url: '/api/posts/retrieve',
             method:'POST',
             data: post_id
         }) 
@@ -99,8 +95,8 @@ export default class Posts extends React.Component {
         })
         .catch(() => {
             console.log('Error')
-        })
-      }
+        });
+      };
 
     save = (e) => {
           e.preventDefault();
@@ -108,10 +104,11 @@ export default class Posts extends React.Component {
           const post = {
               id: this.state.updateID,
               opinion: this.state.updateOpinion,
-              thought: this.state.updateThought
-          }
+              thought: this.state.updateThought,
+              firstName: this.state.firstName
+            }
           axios({
-              url: '/api/update',
+              url: '/api/posts/update',
               method: 'POST',
               data: post
           })
@@ -125,8 +122,8 @@ export default class Posts extends React.Component {
           })
           .catch(() => {
               console.log('Error')
-          })
-      }
+          });
+      };
 
     delete = (e) => {
           e.preventDefault()
@@ -134,7 +131,7 @@ export default class Posts extends React.Component {
               id: e.target.dataset.id
           }
           axios({
-              url: '/api/delete',
+              url: '/api/posts/delete',
               method: 'POST',
               data: post_id
           })
@@ -147,22 +144,14 @@ export default class Posts extends React.Component {
           })
           .catch(() => {
               console.log('Error')
-          })
-      }
+          });
+      };
 
     cancelUpdate = (e) => {
         e.preventDefault();
         this.setState({isInEditMode: false})
-    }
-
-    // showComment = (e) => {
-    //     e.preventDefault()
-    //     this.setState({isInCommentMode: true})
-    // }
+    };
   
-
- 
-
     resetUserInputs = () => {
     this.setState({
        thought: [],
@@ -172,26 +161,37 @@ export default class Posts extends React.Component {
      });
    };
 
-
-   displayPosts =(posts) => {
-      
+   displayPosts =(posts) => {      
        if (!posts.length) return null;
        return posts.map((post, index) => (
            <div key={index} className="post-area">
                  <h4 className="post-return" id="thought">{post.thought}</h4>
                  <p className="post-return">{post.opinion}</p>  
-       
-            <div className="return-btns">
-              <form data-id={post._id} onSubmit={ this.delete }>
-                <input className="delete-btn" type="submit" value="Delete"/>
-              </form>
-              <form data-id={post._id} onSubmit={ this.update}>
-                <input className="edit-btn" type="submit" value="Edit"/>
-              </form>
-            </div>  
-               </div>
-       ))
+                <div className="return-btns">
+                <form data-id={post._id} onSubmit={ this.delete }>
+                    <input className="delete-btn" type="submit" value="Delete"/>
+                </form>
+                <form data-id={post._id} onSubmit={ this.update}>
+                    <input className="edit-btn" type="submit" value="Edit"/>
+                </form>
+                </div>  
+            </div>
+       ));
    };
+
+   takeUserId = () => {
+    const { params } = this.props
+    console.log("hey we are in takeUserid function and we are getting ");
+    axios({
+      url: '/api/user/find',
+      method: 'POST',
+      data: params
+    }).then((response) => {
+      let firstName = response.data.firstName
+      this.setState({firstName: firstName})
+      console.log(this.state.firstName)
+    });
+  };
 
    render(){
        console.log('State: ', this.state)
@@ -205,19 +205,26 @@ export default class Posts extends React.Component {
         $("#comment-box").hide()
     }else{
         $("#comment-box").show()
+    } if(this.state.firstName !== undefined) {
+      console.log(this.state.firstName )
+      console.log("true")
+      $(".topsection").show()
+    }else{
+      console.log('false')
+      $(".topsection").hide()
     }
    
-
      return(
-         <div className="post-page">  
-             <div className="container">
-                   <button className="gen-btn" onClick={this.randomThought}>Thought Generator</button>
+         <div >
+            <Title/>
+            <div className="post-page" data-testid="post-page-test">  
+                <div className="container">
+                    <button className="gen-btn" onClick={this.randomThought}>Thought Generator</button>
                     <h3 
                         className="thought-area"
                         name="thought"
                         >{this.state.thought}</h3>
-                <form className="form-area" onSubmit={this.submit}>
-                  
+                    <form className="form-area" onSubmit={this.submit}>
                     <textarea
                         className="opinion-area"
                         name="opinion"
@@ -227,35 +234,33 @@ export default class Posts extends React.Component {
                         maxLength="150"
                         value={this.state.opinion}
                         onChange={this.handleChange}>
-                  </textarea>                     
-                   <input className="submit-btn" type= "submit" value="Submit"/>
-                </form>
-                
-              </div>
-                    <h2 className="opinion-header">Your Opinions</h2>
-            <div className="container">
-                 <div className="edit-container" id="edit-posts">
-                     <h4 className="opinion-header"> Edit your post below... </h4>
-                        <form className="form-area" onSubmit={this.save}>        
-                        <input id="edit-thought" className="edit-opinion-area" type="text" value={this.state.updateThought} onChange={this.handleChange} name="updateThought"/>
-                        <textarea
-                        name="updateOpinion"
-                        placeholder="Change Your mind"
-                        className="edit-opinion-area"
-                        maxLength="150"
-                        value={this.state.updateOpinion}
-                        onChange={this.handleChange}>
-                        </textarea>
-                        <div className="return-btns">
-                        <input  className="submit-btn" type="submit" value="Submit"/> 
-                        <input className="cancel-btn" type="submit" value="Cancel" onSubmit={this.cancelUpdate}></input>   
-                        </div>          
+                    </textarea>                     
+                    <input className="submit-btn" type= "submit" value="Submit"/>
                     </form>
-             </div>    
-              {this.displayPosts(this.state.posts)}
-               
+                </div>
+                    <h2 className="opinion-header">Your Opinions</h2>
+                    <div className="edit-container" id="edit-posts">
+                        <h4 className="opinion-header"> Edit your post below... </h4>
+                        <form className="form-area" onSubmit={this.save}>        
+                            <input id="edit-thought" className="edit-opinion-area" type="text" value={this.state.updateThought} onChange={this.handleChange} name="updateThought"/>
+                            <textarea
+                            name="updateOpinion"
+                            placeholder="Change Your mind"
+                            className="edit-opinion-area"
+                            maxLength="150"
+                            value={this.state.updateOpinion}
+                            onChange={this.handleChange}>
+                            </textarea>
+                            <div className="return-btns">
+                                <input  className="submit-btn" type="submit" value="Submit"/> 
+                                <input className="cancel-btn" type="submit" value="Cancel" onSubmit={this.cancelUpdate}></input>   
+                            </div>          
+                        </form>
+                </div>    
+                    <div className="container">
+                    {this.displayPosts(this.state.posts)}     
+                    </div> 
             </div>
-                  
         </div>
      )
    };

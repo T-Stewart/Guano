@@ -1,0 +1,24 @@
+.create-wrapper {
+  background: #25272e;
+  margin-top: 25px;
+  margin-left: 25px;
+  margin-right: 25px;
+  height: 700px;
+  border-radius: 25em;
+  display: grid;
+  justify-content: center;
+}
+
+.creat-user-btn {
+  width: 150px;
+  height: 50px;
+  font-size: 150%;
+  color: #24262d;
+  margin-bottom: 10px;
+  border-radius: 32px;
+  background-color: #9ca6c9;
+  font-family: monospace;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}

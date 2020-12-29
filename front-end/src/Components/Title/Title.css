@@ -1,5 +1,23 @@
-body {
-  background: #ad343e;
+.title-container {
+  background-color: transparent;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+.header-text {
+  text-align: right;
+  color: #bfc3ce;
+  margin-right: 20px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.guano {
+  text-align: right;
+  margin-right: 20px;
+  padding-left: 100px;
+  color: #767c91;
+  font-family: monospace;
 }
 
 @media screen and (max-width: 768px) {
@@ -20,8 +38,5 @@ body {
     font-size: 500%;
     margin-right: 0px;
     padding: 0px;
-  }
-  .App {
-    border-radius: 15em;
   }
 }
