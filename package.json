@@ -6,7 +6,7 @@
         "client": "cd front-end && npm start",
         "build": "cd front-end && npm run build",
         "install-client": "cd front-end && npm install",
-        "heroku-postbuil": "npm run install-client && npm run build",
+        "heroku-postbuild": "npm run install-client && npm run build",
         "server": "cd back-end && nodemon server.js",
         "dev": "concurrently \"npm run server\" \"npm run client\""
   },
