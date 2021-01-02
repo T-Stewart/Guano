@@ -1,0 +1,14 @@
+ {
+    "name": "front-end",
+    "version": "0.1.0",
+    "private": true, 
+    "scripts": {
+        "client": "cd front-end && npm start",
+        "server": "cd back-end/bin && nodemon www",
+        "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+     "dependencies": {
+      "concurrently": "^5.3.0",
+      "nodemon": "^2.0.6"
+   }
+}
